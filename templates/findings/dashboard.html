@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{% if project %}{{ project.name }}{% else %}All projects{% endif %}</h1>
+    <p class="lede">Security findings across the five SITF pillars of your code factory.</p>
+  </div>
+  <div class="head-actions">
+    <span class="date-pill" title="Period covered by the weekly trend">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+      {{ period.start|date:"j M" }} – {{ period.end|date:"j M Y" }}
+    </span>
+    {% if user.role == 'ADMIN' or user.is_superuser %}
+    <a class="btn primary" href="{% url 'project_list' %}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Add project</a>
+    {% endif %}
+  </div>
+</div>
+
+<form method="get" class="toolbar inline">
+  <label for="id_project">Project</label>{{ filter_form.project }}
+  <button type="submit" class="btn accent">Show</button>
+</form>
+
+<div class="stats">
+  {% for c in stat_cards %}
+  <div class="stat {{ c.key }}">
+    <div class="stat-top">
+      <span class="stat-icon" aria-hidden="true">
+        {% if c.icon == "search" %}<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 3v5h5M19 8v2"/><circle cx="16" cy="16" r="3"/><path d="m18.2 18.2 2.3 2.3"/></svg>
+        {% elif c.icon == "alert" %}<svg viewBox="0 0 24 24"><path d="M10.3 4.2 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9.5v4.5M12 17.2v.01"/></svg>
+        {% elif c.icon == "check" %}<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/></svg>
+        {% else %}<svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>{% endif %}
+      </span>
+      <div class="stat-body">
+        <span class="stat-label">{{ c.label }}</span>
+        <div class="stat-row">
+          <strong>{{ c.value }}</strong>
+          {% if c.spark %}
+          <svg class="spark" viewBox="{{ c.spark.viewbox }}" aria-hidden="true">
+            <path class="spark-area" d="{{ c.spark.area }}"/>
+            <path class="spark-line" d="{{ c.spark.line }}"/>
+            <circle class="spark-dot" cx="{{ c.spark.x }}" cy="{{ c.spark.y }}" r="4.5"/>
+          </svg>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <p class="trend {{ c.tone }}" title="Compared with the same point one week earlier">
+      <span class="trend-value">{% if c.direction == "up" %}&uarr;{% elif c.direction == "down" %}&darr;{% else %}&rarr;{% endif %}
+      {% if c.change is not None %}{{ c.change }}%{% elif c.direction == "flat" %}0%{% else %}new{% endif %}</span>
+      <span class="trend-note">than last period</span>
+    </p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="grid-2 wide-left">
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Where the factory is exposed</h2>
+      <span class="info" tabindex="0" title="Open findings in each SITF pillar, split by severity.">i</span>
+    </div>
+    <img src="data:image/png;base64,{{ chart_pillar }}" alt="Horizontal stacked bar chart: number of open findings in each SITF pillar (Endpoint/IDE, VCS, CI/CD, Registry, Production), each bar split by severity from Low to Critical">
+  </section>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Findings by severity</h2>
+      <span class="info" tabindex="0" title="Coloured part is still open; grey part is resolved.">i</span>
+    </div>
+    <img src="data:image/png;base64,{{ chart_severity }}" alt="Bar chart: findings at each severity level (Low, Medium, High, Critical), with the open part in colour and the resolved part in grey">
+  </section>
+</div>
+
+<div class="grid-2">
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Open findings over the last 8 weeks</h2>
+      <span class="info" tabindex="0" title="How many findings were still open at the end of each week.">i</span>
+    </div>
+    <img src="data:image/png;base64,{{ chart_trend }}" alt="Line chart: number of findings still open at the end of each of the last 8 weeks">
+  </section>
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Recent open findings</h2>
+      <a class="view-all" href="{% url 'finding_list' %}">View all <span aria-hidden="true">&rarr;</span></a>
+    </div>
+    <div class="table-wrap flush">
+      <table class="compact">
+        <thead><tr><th>ID</th><th>Title</th><th>Severity</th><th>Pillar</th><th>Reported</th><th><span class="visually-hidden">Open</span></th></tr></thead>
+        <tbody>
+        {% for f in recent %}
+          <tr class="row-link">
+            <td class="muted">FG-{{ f.pk|stringformat:"04d" }}</td>
+            <td><a href="{% url 'finding_detail' f.pk %}">{{ f.title }}</a></td>
+            <td><span class="pill {{ f.severity }}">{{ f.get_severity_display }}</span></td>
+            <td>{{ f.technique.pillar.name }}</td>
+            <td class="muted nowrap">{{ f.reported_at|date:"j M Y" }}</td>
+            <td class="chev" aria-hidden="true">&rsaquo;</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="muted">No open findings. Nice work.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}

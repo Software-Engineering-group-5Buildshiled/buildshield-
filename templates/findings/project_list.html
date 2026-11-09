@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<h1>Projects</h1>
+<p class="lede">The software projects whose code factory FactoryGuard monitors.</p>
+<div class="table-wrap" style="margin-bottom:24px">
+<table>
+  <thead><tr><th>Project</th><th>Repository</th><th class="num">Risk score</th></tr></thead>
+  <tbody>
+  {% for p in projects %}
+    <tr><td>{{ p.name }}</td><td>{% if p.repository_url %}<a href="{{ p.repository_url }}" rel="noopener noreferrer">{{ p.repository_url }}</a>{% endif %}</td><td class="num">{{ p.risk_score }}</td></tr>
+  {% empty %}
+    <tr><td colspan="3">No projects yet. Add the first one below.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<section class="panel">
+  <h2>Add a project</h2>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% for field in form %}
+    <div><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</div>
+    {% endfor %}
+    <div><button type="submit" class="btn primary">Add project</button></div>
+  </form>
+</section>
+{% endblock %}

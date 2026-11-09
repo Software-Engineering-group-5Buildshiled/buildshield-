@@ -1,0 +1,119 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in · FactoryGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <script src="{% static 'js/login.js' %}" defer></script>
+</head>
+<body class="auth">
+
+<!-- Left: brand panel -->
+<section class="hero" aria-label="FactoryGuard">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="grid"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="logo reveal" style="--d:0">
+      <svg viewBox="0 0 64 72" class="shield" aria-hidden="true">
+        <path d="M32 3 59 13v20c0 17-11.5 30-27 36C16.5 63 5 50 5 33V13L32 3Z" fill="none" stroke="#F2A900" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M23 21h19v6H30v5h10v6H30v12h-7Z" fill="#F2A900"/>
+      </svg>
+      <div>
+        <div class="wordmark">Factory<span>Guard</span></div>
+        <div class="tagline">Secure <b>|</b> Build <b>|</b> Grow</div>
+      </div>
+    </div>
+
+    <!-- Decorative editor: login.js types real Django code from this project into it. -->
+    <div class="editor reveal" style="--d:1" aria-hidden="true">
+      <div class="ed-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <div class="ed-tabs">
+          <span class="ed-tab active" data-file="0">views.py</span>
+          <span class="ed-tab" data-file="1">models.py</span>
+          <span class="ed-tab" data-file="2">dashboard.py</span>
+        </div>
+      </div>
+      <div class="ed-path"><span>factoryguard</span> › <span>findings</span> › <span class="ed-file">views.py</span></div>
+      <div class="ed-body">
+        <ol class="ed-gutter"></ol>
+        <pre class="ed-code"><code>@login_required
+def dashboard(request):
+    form, project = _filtered_project(request)
+    board = Dashboard(project=project)
+    ...</code></pre>
+      </div>
+      <div class="ed-status">
+        <span class="st-branch">&#9095; main</span>
+        <span class="st-run"><i class="st-dot"></i><span class="st-text">python manage.py test</span></span>
+        <span class="st-meta">Python 3.12 · Django 5.2</span>
+      </div>
+    </div>
+
+    <div class="chips reveal" style="--d:2" aria-hidden="true">
+      <span>@login_required</span><span>CSRF protected</span><span>Django ORM only</span><span>Matplotlib charts</span>
+    </div>
+  </div>
+
+  <svg class="curve" viewBox="0 0 200 1000" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M200 0H120C40 220 150 380 90 560 40 720 60 860 0 1000h200Z" fill="var(--paper)"/>
+    <path class="curve-line" d="M120 0C40 220 150 380 90 560 40 720 60 860 0 1000" fill="none" stroke="#F2A900" stroke-width="2.5" vector-effect="non-scaling-stroke"/>
+  </svg>
+</section>
+
+<!-- Right: sign-in card -->
+<main class="panel">
+
+  <div class="card{% if form.errors %} shake{% endif %}">
+    <p class="welcome">Welcome to</p>
+    <h1 class="title">Factory<span>Guard</span></h1>
+    <p class="hint">Log in to continue to your account.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+
+      {% if form.non_field_errors %}
+      <div class="alert" role="alert">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        <div>{% for e in form.non_field_errors %}{{ e }}{% endfor %}</div>
+      </div>
+      {% endif %}
+
+      <label class="field-label" for="id_username">Username</label>
+      <div class="field">
+        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+        <input type="text" name="username" id="id_username" placeholder="Enter your username"
+               value="{{ form.username.value|default_if_none:'' }}" maxlength="150"
+               autocomplete="username" autocapitalize="none" autofocus required>
+      </div>
+
+      <label class="field-label" for="id_password">Password</label>
+      <div class="field">
+        <span class="icon"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.2"/></svg></span>
+        <input type="password" name="password" id="id_password" placeholder="Enter your password"
+               autocomplete="current-password" required>
+        <button type="button" class="reveal-pw" aria-label="Show password" aria-pressed="false" data-target="id_password">
+          <svg class="eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.6 3.4M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></svg>
+        </button>
+      </div>
+
+      <button type="submit" class="submit">
+        <span>Log in</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+
+    <div class="divider" aria-hidden="true"><span>Secured session</span></div>
+    <p class="help">Forgot your password or need an account?<br><strong>Contact your administrator.</strong></p>
+  </div>
+</main>
+
+</body>
+</html>

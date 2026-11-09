@@ -1,0 +1,50 @@
+# CircleCI pipeline for FactoryGuard.
+# On every push to GitHub: install dependencies, check for security issues,
+# then run the unit tests. A failed step stops the pipeline.
+version: 2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.12
+    environment:
+      DJANGO_DEBUG: "true"   # test settings only; production sets a real secret key
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - pip-v1-{{ checksum "requirements.txt" }}
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          key: pip-v1-{{ checksum "requirements.txt" }}
+          paths:
+            - venv
+      - run:
+          name: Django system checks and missing migrations
+          command: |
+            . venv/bin/activate
+            python manage.py check
+            python manage.py makemigrations --check --dry-run
+      - run:
+          name: Security scan with Bandit
+          command: |
+            . venv/bin/activate
+            bandit -r accounts findings factoryguard -x "*/tests.py,*/migrations/*" -ll
+      - run:
+          name: Run unit tests
+          command: |
+            . venv/bin/activate
+            mkdir -p test-results
+            python manage.py test --verbosity 2 2>&1 | tee test-results/output.txt
+      - store_artifacts:
+          path: test-results
+
+workflows:
+  ci:
+    jobs:
+      - build-and-test

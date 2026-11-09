@@ -1,0 +1,91 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}FactoryGuard{% endblock %} · FactoryGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+{% block body %}
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="{% url 'dashboard' %}">
+      <svg viewBox="0 0 64 72" class="brand-mark" aria-hidden="true">
+        <path d="M32 3 59 13v20c0 17-11.5 30-27 36C16.5 63 5 50 5 33V13L32 3Z" fill="none" stroke="#F2A900" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M23 21h19v6H30v5h10v6H30v12h-7Z" fill="#F2A900"/>
+      </svg>
+      <span>Factory<b>Guard</b><small>SDLC infrastructure security</small></span>
+    </a>
+
+    {% with url=request.resolver_match.url_name %}
+    <nav aria-label="Main">
+      <a href="{% url 'dashboard' %}" class="{% if url == 'dashboard' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard</a>
+      <a href="{% url 'finding_list' %}" class="{% if url == 'finding_list' or url == 'finding_detail' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        Findings</a>
+      {% if user.role == 'DEV' or user.role == 'ANALYST' or user.is_superuser %}
+      <a href="{% url 'finding_create' %}" class="{% if url == 'finding_create' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+        Report a finding</a>
+      {% endif %}
+      {% if user.role == 'ANALYST' or user.is_superuser %}
+      <a href="{% url 'summary_report' %}" class="{% if url == 'summary_report' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>
+        Summary report</a>
+      {% endif %}
+      {% if user.role == 'ADMIN' or user.is_superuser %}
+      <a href="{% url 'project_list' %}" class="{% if url == 'project_list' %}active{% endif %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+        Projects</a>
+      <a href="{% url 'admin:index' %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>
+        Users and roles</a>
+      {% endif %}
+    </nav>
+    {% endwith %}
+
+    <div class="who">
+      <div class="who-card">
+        <span class="avatar" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </span>
+        <span><strong>{{ user.username }}</strong>{{ user.get_role_display }}</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+        <button type="submit" class="logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9"/></svg>
+          Log out
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <form class="search" method="get" action="{% url 'finding_list' %}" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <label class="visually-hidden" for="top-search">Search findings</label>
+        <input id="top-search" type="search" name="q" maxlength="100" placeholder="Search findings, projects, pillars…" value="{{ request.GET.q }}">
+      </form>
+      <div class="user-chip">
+        <span class="initial" aria-hidden="true">{{ user.username|first|upper }}</span>
+        <span><strong>{{ user.username }}</strong>{{ user.get_role_display }}</span>
+      </div>
+    </header>
+
+    <main>
+      {% if messages %}
+      <ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
+</body>
+</html>

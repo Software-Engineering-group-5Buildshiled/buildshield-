@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ finding.title }}{% endblock %}
+{% block content %}
+<h1>{{ finding.title }}</h1>
+<p class="lede"><span class="sev {{ finding.severity }}">{{ finding.get_severity_display }}</span> &nbsp; <span class="status {{ finding.status }}">{{ finding.get_status_display }}</span></p>
+
+<section class="panel">
+  <dl class="facts">
+    <dt>Project</dt><dd>{{ finding.project.name }}</dd>
+    <dt>Pillar</dt><dd>{{ finding.technique.pillar.name }}</dd>
+    <dt>Technique</dt><dd>{{ finding.technique.name }}</dd>
+    <dt>Reported by</dt><dd>{{ finding.reported_by.username }} on {{ finding.reported_at|date:"j M Y, H:i" }}</dd>
+    <dt>Owner</dt><dd>{{ finding.assigned_to.username|default:"Unassigned" }}</dd>
+    {% if finding.resolved_at %}<dt>Resolved</dt><dd>{{ finding.resolved_at|date:"j M Y, H:i" }}</dd>{% endif %}
+  </dl>
+  <p>{{ finding.description|linebreaksbr }}</p>
+</section>
+
+<div class="pair">
+  {% if can_update %}
+  <section class="panel">
+    <h2>Update status</h2>
+    <form method="post" action="{% url 'finding_update_status' finding.pk %}" class="toolbar">
+      {% csrf_token %}
+      <div><label for="id_status">Status</label>{{ status_form.status }}</div>
+      <button type="submit" class="btn primary">Save status</button>
+    </form>
+  </section>
+  {% endif %}
+  {% if user.role == 'ANALYST' or user.is_superuser %}
+  <section class="panel">
+    <h2>Assign an owner</h2>
+    <form method="post" action="{% url 'finding_assign' finding.pk %}" class="toolbar">
+      {% csrf_token %}
+      <div><label for="id_assigned_to">Owner</label>{{ assign_form.assigned_to }}</div>
+      <button type="submit" class="btn primary">Assign</button>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
