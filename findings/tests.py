@@ -1,4 +1,4 @@
-"""Unit tests for FactoryGuard.
+"""Unit tests for BuildShield.
 
 TC-01 and TC-02 are the two test cases documented in the Part 2 test plan.
 The others add extra coverage and run in the same CI pipeline.
@@ -14,7 +14,7 @@ from .models import AttackTechnique, Finding, Project, SITFPillar
 from .views import _safe_cell
 
 
-class FactoryGuardTestBase(TestCase):
+class BuildShieldTestBase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.pillar = SITFPillar.objects.create(name="CI/CD", order=3)
@@ -37,7 +37,7 @@ class FactoryGuardTestBase(TestCase):
         return Finding.objects.create(**defaults)
 
 
-class TC01FindingStatusTests(FactoryGuardTestBase):
+class TC01FindingStatusTests(BuildShieldTestBase):
     """TC-01: Resolving a finding records when it was resolved; reopening clears it."""
 
     def test_resolving_sets_resolved_at(self):
@@ -65,7 +65,7 @@ class TC01FindingStatusTests(FactoryGuardTestBase):
             finding.update_status("DELETED")
 
 
-class TC02AccessControlTests(FactoryGuardTestBase):
+class TC02AccessControlTests(BuildShieldTestBase):
     """TC-02: The server blocks actions a user's role does not allow."""
 
     def test_developer_cannot_assign_owner(self):
@@ -102,7 +102,7 @@ class TC02AccessControlTests(FactoryGuardTestBase):
         self.assertEqual(finding.assigned_to, self.dev)
 
 
-class ExtraTests(FactoryGuardTestBase):
+class ExtraTests(BuildShieldTestBase):
     def test_anonymous_user_is_sent_to_login(self):
         response = self.client.get(reverse("dashboard"))
         self.assertEqual(response.status_code, 302)

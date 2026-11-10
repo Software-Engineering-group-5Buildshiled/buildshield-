@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log in · FactoryGuard</title>
+  <title>Log in · BuildShield</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
@@ -12,7 +12,7 @@
 <body class="auth">
 
 <!-- Left: brand panel -->
-<section class="hero" aria-label="FactoryGuard">
+<section class="hero" aria-label="BuildShield">
   <div class="hero-bg" aria-hidden="true">
     <div class="grid"></div>
   </div>
@@ -24,7 +24,7 @@
         <path d="M23 21h19v6H30v5h10v6H30v12h-7Z" fill="#F2A900"/>
       </svg>
       <div>
-        <div class="wordmark">Factory<span>Guard</span></div>
+        <div class="wordmark">Build<span>Shield</span></div>
         <div class="tagline">Secure <b>|</b> Build <b>|</b> Grow</div>
       </div>
     </div>
@@ -39,7 +39,7 @@
           <span class="ed-tab" data-file="2">dashboard.py</span>
         </div>
       </div>
-      <div class="ed-path"><span>factoryguard</span> › <span>findings</span> › <span class="ed-file">views.py</span></div>
+      <div class="ed-path"><span>buildshield</span> › <span>findings</span> › <span class="ed-file">views.py</span></div>
       <div class="ed-body">
         <ol class="ed-gutter"></ol>
         <pre class="ed-code"><code>@login_required
@@ -71,7 +71,7 @@ def dashboard(request):
 
   <div class="card{% if form.errors %} shake{% endif %}">
     <p class="welcome">Welcome to</p>
-    <h1 class="title">Factory<span>Guard</span></h1>
+    <h1 class="title">Build<span>Shield</span></h1>
     <p class="hint">Log in to continue to your account.</p>
 
     <form method="post" novalidate>

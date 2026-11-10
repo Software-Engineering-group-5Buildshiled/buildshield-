@@ -1,4 +1,4 @@
-# CircleCI pipeline for FactoryGuard.
+# CircleCI pipeline for BuildShield.
 # On every push to GitHub: install dependencies, check for security issues,
 # then run the unit tests. A failed step stops the pipeline.
 version: 2.1

@@ -1,4 +1,4 @@
-# FactoryGuard: An SDLC Infrastructure Security Dashboard
+# BuildShield: An SDLC Infrastructure Security Dashboard
 
 BCS 3106 Software Engineering group project. A Django web dashboard that records
 security findings across the five SITF pillars (Endpoint/IDE, VCS, CI/CD,
