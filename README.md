@@ -70,6 +70,12 @@ templates/     HTML templates
 static/css/    styling
 .circleci/     CI/CD pipeline
 ```
+<<<<<<< HEAD
+
+
+
+
+=======
 ## System Architecture
 
 FactoryGuard follows a Django-based Model-View-Template (MVT)
@@ -89,3 +95,4 @@ of the BCS 3106 Software Engineering group project.
 
 The project encourages collaborative development,
 version control and secure software engineering practices.
+>>>>>>> 15cc2c8d8d902b545d81e05b4d71e7cfa2cdc4a9
