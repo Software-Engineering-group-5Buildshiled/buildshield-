@@ -93,7 +93,7 @@
         <tbody>
         {% for f in recent %}
           <tr class="row-link">
-            <td class="muted">FG-{{ f.pk|stringformat:"04d" }}</td>
+            <td class="muted">BS-{{ f.pk|stringformat:"04d" }}</td>
             <td><a href="{% url 'finding_detail' f.pk %}">{{ f.title }}</a></td>
             <td><span class="pill {{ f.severity }}">{{ f.get_severity_display }}</span></td>
             <td>{{ f.technique.pillar.name }}</td>

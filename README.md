@@ -1,4 +1,4 @@
-# FactoryGuard: An SDLC Infrastructure Security Dashboard
+# BuildShield: An SDLC Infrastructure Security Dashboard
 
 BCS 3106 Software Engineering group project. A Django web dashboard that records
 security findings across the five SITF pillars (Endpoint/IDE, VCS, CI/CD,
@@ -70,7 +70,29 @@ templates/     HTML templates
 static/css/    styling
 .circleci/     CI/CD pipeline
 ```
+<<<<<<< HEAD
 
 
 
 
+=======
+## System Architecture
+
+FactoryGuard follows a Django-based Model-View-Template (MVT)
+architecture.
+
+- Frontend: HTML, CSS and Django Templates
+- Backend: Python and Django
+- Database: SQLite (development)
+- Visualization: Matplotlib
+- Authentication: Django Authentication System
+- Security: Role-based access control
+
+## Development Team
+
+FactoryGuard is developed collaboratively as part
+of the BCS 3106 Software Engineering group project.
+
+The project encourages collaborative development,
+version control and secure software engineering practices.
+>>>>>>> 15cc2c8d8d902b545d81e05b4d71e7cfa2cdc4a9

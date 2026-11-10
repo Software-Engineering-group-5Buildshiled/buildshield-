@@ -158,7 +158,7 @@ def _safe_cell(value):
 
 def _csv_response(rows, project):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="factoryguard-summary.csv"'
+    response["Content-Disposition"] = 'attachment; filename="buildshield-summary.csv"'
     writer = csv.writer(response)
     writer.writerow(["Project", _safe_cell(project.name) if project else "All projects"])
     writer.writerow(["Pillar", "Total", "Open", "Critical", "Resolved"])

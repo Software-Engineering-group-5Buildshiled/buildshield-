@@ -1,5 +1,5 @@
 """
-Django settings for FactoryGuard.
+Django settings for BuildShield.
 
 Secure coding: secrets and environment-specific values come from environment
 variables, never from source code. DEBUG is off unless explicitly enabled.
