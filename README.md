@@ -70,3 +70,22 @@ templates/     HTML templates
 static/css/    styling
 .circleci/     CI/CD pipeline
 ```
+## System Architecture
+
+FactoryGuard follows a Django-based Model-View-Template (MVT)
+architecture.
+
+- Frontend: HTML, CSS and Django Templates
+- Backend: Python and Django
+- Database: SQLite (development)
+- Visualization: Matplotlib
+- Authentication: Django Authentication System
+- Security: Role-based access control
+
+## Development Team
+
+FactoryGuard is developed collaboratively as part
+of the BCS 3106 Software Engineering group project.
+
+The project encourages collaborative development,
+version control and secure software engineering practices.
