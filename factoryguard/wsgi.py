@@ -1,5 +1,5 @@
 """
-WSGI config for factoryguard project.
+WSGI config for the BuildShield project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

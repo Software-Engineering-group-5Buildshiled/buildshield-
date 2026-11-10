@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    """A FactoryGuard user. The role decides what each user may do."""
+    """A BuildShield user. The role decides what each user may do."""
 
     class Role(models.TextChoices):
         DEVELOPER = "DEV", "Developer"
